@@ -1,739 +1,916 @@
 <!DOCTYPE html>
-<html lang="fr" class="h-full">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maths Halloween - Additions à Trous (CE2)</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Creepster for Halloween title, Fredoka for child-friendly readability -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Canvas Confetti for celebratory effects -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>L'Aventure des Maths ! 🚀</title>
+  <meta name="description" content="Portail de jeux éducatifs de calcul mental pour les enfants de CE2." />
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        spooky: {
-                            orange: '#ff6b00',
-                            purple: '#4c1d95',
-                            darkPurple: '#2e1065',
-                            green: '#22c55e',
-                            yellow: '#f59e0b',
-                            bg: '#0f0720',
-                            card: '#1e0c3e'
-                        }
-                    },
-                    fontFamily: {
-                        spooky: ['Creepster', 'cursive'],
-                        kids: ['Fredoka', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>" />
 
-    <style>
-        body {
-            font-family: 'Fredoka', sans-serif;
-            background: radial-gradient(circle at center, #2e1065 0%, #0f0720 100%);
-            min-height: 100vh;
-            color: #f3e8ff;
-            user-select: none;
-        }
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;700&family=Cinzel:wght@600;700&family=EB+Garamond:wght@500;600&display=swap" rel="stylesheet" />
 
-        @keyframes floatSlow {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-12px) rotate(4deg); }
-        }
-        @keyframes pulseGlow {
-            0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 107, 0, 0.4)); }
-            50% { filter: drop-shadow(0 0 20px rgba(255, 107, 0, 0.8)); }
-        }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-8px); }
-            40%, 80% { transform: translateX(8px); }
-        }
+  <!-- Statistiques anonymes (GoatCounter) : sans cookie, sans donnée personnelle.
+       Compte GoatCounter : sim07. -->
+  <script data-goatcounter="https://sim07.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
 
-        .animate-float { animation: floatSlow 4s ease-in-out infinite; }
-        .animate-glow { animation: pulseGlow 3s ease-in-out infinite; }
-        .shake-animation { animation: shake 0.4s ease-in-out; }
+  <style>
+    /* ============ VARIABLES PAR DÉFAUT (thème jour) ============ */
+    :root {
+      --bg-color: #F0F4F8;
+      --card-bg: #FFFFFF;
+      --text-main: #2D3748;
+      --text-soft: #4A5568;
+      --title-color: #118AB2;
+      --title-shadow: #FFD166;
+      --accent-1: #FF6B6B;
+      --accent-1-shadow: #D94141;
+      --accent-2: #06D6A0;
+      --accent-2-shadow: #049A73;
+      --accent-3: #8338EC;
+      --accent-3-shadow: #5E1FB8;
+      --card-border-1: #FF6B6B;
+      --card-border-2: #06D6A0;
+      --card-border-3: #8338EC;
+      --shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 14px 28px rgba(0, 0, 0, 0.12);
+      --font-title: 'Fredoka One', cursive;
+      --font-body: 'Quicksand', sans-serif;
+      --group-bg: rgba(255, 255, 255, 0.6);
+      --group-border: #CBD5E0;
+    }
 
-        .input-hole {
-            background-color: rgba(15, 7, 32, 0.9);
-            border: 3px dashed #ff6b00;
-            color: #f59e0b;
-            text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
-            width: 90px;
-            text-align: center;
-            border-radius: 1rem;
-        }
-        .input-hole:focus {
-            outline: none;
-            border-color: #22c55e;
-            box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
-        }
+    /* ============ THÈME SORCIER ============ */
+    [data-theme="magic"] {
+      --bg-color: #0E1A2B;
+      --card-bg: #1B2A41;
+      --text-main: #E8D9A0;
+      --text-soft: #C9B77A;
+      --title-color: #D4AF37;
+      --title-shadow: #740001;
+      --accent-1: #B8860B;
+      --accent-1-shadow: #6B4E00;
+      --accent-2: #2A623D;
+      --accent-2-shadow: #14321E;
+      --accent-3: #740001;
+      --accent-3-shadow: #3B0000;
+      --card-border-1: #B8860B;
+      --card-border-2: #2A623D;
+      --card-border-3: #740001;
+      --shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+      --shadow-hover: 0 14px 30px rgba(212, 175, 55, 0.25);
+      --font-title: 'Cinzel', serif;
+      --font-body: 'EB Garamond', serif;
+      --group-bg: rgba(212, 175, 55, 0.08);
+      --group-border: #D4AF37;
+    }
 
-        /* Hide HTML5 spin buttons */
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0f0720; }
-        ::-webkit-scrollbar-thumb { background: #4c1d95; border-radius: 4px; }
-    </style>
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 1.5rem 1rem;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    /* ============ HEADER ============ */
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      width: 100%;
+      max-width: 950px;
+    }
+
+    h1 {
+      font-family: var(--font-title);
+      font-size: 2.8rem;
+      color: var(--title-color);
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+      text-shadow: 3px 3px 0px var(--title-shadow);
+      transition: color 0.4s ease, text-shadow 0.4s ease;
+    }
+
+    p.subtitle {
+      font-size: 1.2rem;
+      color: var(--text-soft);
+      font-weight: 700;
+      transition: color 0.4s ease;
+    }
+
+    /* ============ SWITCH DE THÈME ============ */
+    .theme-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--card-bg);
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--group-border);
+      margin-bottom: 1.4rem;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .theme-switch__label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      white-space: nowrap;
+      transition: color 0.4s ease;
+    }
+
+    .toggle {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle__slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #CBD5E0;
+      border-radius: 28px;
+      transition: background-color 0.3s ease;
+    }
+
+    .toggle__slider::before {
+      content: "";
+      position: absolute;
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle input:checked + .toggle__slider {
+      background-color: #B8860B;
+    }
+
+    .toggle input:checked + .toggle__slider::before {
+      transform: translateX(24px);
+    }
+
+    .toggle input:focus-visible + .toggle__slider {
+      outline: 3px solid var(--accent-3);
+      outline-offset: 3px;
+    }
+
+    /* ============ GROUPES DE NIVEAUX ============ */
+    main {
+      width: 100%;
+      max-width: 950px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .level-group {
+      width: 100%;
+      margin-bottom: 2rem;
+      padding: 1.5rem 1.2rem 1.8rem;
+      background: var(--group-bg);
+      border: 2px dashed var(--group-border);
+      border-radius: 24px;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .level-group__header {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 1.4rem;
+      padding-left: 0.3rem;
+      flex-wrap: wrap;
+    }
+
+    .level-group__icon {
+      font-size: 1.8rem;
+    }
+
+    .level-group__title {
+      font-family: var(--font-title);
+      font-size: 1.6rem;
+      color: var(--title-color);
+      transition: color 0.4s ease;
+    }
+
+    .level-group__badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: var(--accent-2);
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ============ GRILLE DE CARTES ============ */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 22px;
+      padding: 1.8rem 1.3rem;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease,
+                  background 0.4s ease, border-color 0.4s ease;
+      border: 4px solid transparent;
+      position: relative;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: inherit;
+      width: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card:focus-visible {
+      outline: 3px solid var(--accent-3);
+      outline-offset: 4px;
+    }
+
+    .card--1 { border-color: var(--card-border-1); }
+    .card--2 { border-color: var(--card-border-2); }
+    .card--3 { border-color: var(--card-border-3); }
+
+    .card-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+    }
+
+    .card-title {
+      font-family: var(--font-title);
+      font-size: 1.4rem;
+      margin-bottom: 0.6rem;
+      color: var(--text-main);
+      transition: color 0.4s ease;
+    }
+
+    .card-desc {
+      font-size: 1rem;
+      line-height: 1.4;
+      color: var(--text-soft);
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+      transition: color 0.4s ease;
+    }
+
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 0.8rem 1.2rem;
+      color: white;
+      font-family: var(--font-title);
+      font-size: 1.15rem;
+      text-decoration: none;
+      border-radius: 14px;
+      transition: filter 0.2s ease, transform 0.1s ease, background 0.4s ease;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .card--1 .btn { background-color: var(--accent-1); box-shadow: 0 4px 0 var(--accent-1-shadow); }
+    .card--2 .btn { background-color: var(--accent-2); box-shadow: 0 4px 0 var(--accent-2-shadow); }
+    .card--3 .btn { background-color: var(--accent-3); box-shadow: 0 4px 0 var(--accent-3-shadow); }
+
+    .card:hover .btn { filter: brightness(1.1); }
+
+    .card:active .btn,
+    .card:active {
+      transform: translateY(2px);
+      box-shadow: none;
+    }
+
+    /* ============================================================
+       VUE JEU (iframe) — optimisée mobile/tablette
+       ============================================================ */
+    .game-view {
+      width: 100%;
+      max-width: 950px;
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      gap: 0.5rem;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .game-view.is-active {
+      display: flex;
+    }
+
+    /* Quand un jeu est actif : on compacte tout et on cache l'accueil */
+    body.is-playing {
+      padding: 0.4rem;
+      align-items: stretch;
+    }
+
+    body.is-playing header,
+    body.is-playing footer,
+    body.is-playing .level-group {
+      display: none;
+    }
+
+    body.is-playing main {
+      max-width: 100%;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header de la vue jeu : compact, sticky */
+    .game-view__header {
+      position: sticky;
+      top: 0.4rem;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      padding: 0.5rem 0.8rem;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--group-border);
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .game-view__title {
+      font-family: var(--font-title);
+      font-size: 1.15rem;
+      color: var(--title-color);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      min-width: 0;
+      flex: 1 1 auto;
+      transition: color 0.4s ease;
+    }
+
+    .game-view__title .game-view__icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+
+    #game-view-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    /* Badge du nom de groupe */
+    .game-view__group {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: var(--accent-2);
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background 0.4s ease;
+    }
+
+    .game-view__actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 1rem;
+      background: var(--accent-3);
+      color: white;
+      font-family: var(--font-title);
+      font-size: 0.95rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 3px 0 var(--accent-3-shadow);
+      transition: filter 0.2s ease, transform 0.1s ease;
+      min-height: 40px;
+    }
+
+    .back-btn:hover { filter: brightness(1.1); }
+    .back-btn:active {
+      transform: translateY(2px);
+      box-shadow: none;
+    }
+
+    .back-btn:focus-visible {
+      outline: 3px solid var(--accent-3);
+      outline-offset: 3px;
+    }
+
+    /* Bouton "ouvrir dans un onglet" — masqué sur mobile */
+    .open-external {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      text-decoration: none;
+      padding: 0.5rem 0.9rem;
+      border-radius: 999px;
+      border: 2px solid var(--group-border);
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      background: transparent;
+      font-family: var(--font-body);
+      font-weight: 700;
+      cursor: pointer;
+      min-height: 40px;
+    }
+
+    .open-external:hover {
+      color: var(--title-color);
+      border-color: var(--title-color);
+    }
+
+    /* Wrapper de l'iframe : prend toute la hauteur restante */
+    .game-view__frame-wrapper {
+      flex: 1;
+      min-height: 0;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      border: 2px solid var(--group-border);
+      overflow: hidden;
+      transition: background 0.4s ease, border-color 0.4s ease;
+      position: relative;
+    }
+
+    .game-view__frame {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: white;
+    }
+
+    /* ============ FOOTER ============ */
+    footer {
+      margin-top: auto;
+      padding-top: 2rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-soft);
+      opacity: 0.7;
+      transition: color 0.4s ease;
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 640px) {
+      h1 { font-size: 1.9rem; }
+      header { margin-bottom: 1.2rem; }
+      .level-group { padding: 1.2rem 0.8rem 1.4rem; }
+      .level-group__title { font-size: 1.3rem; }
+
+      .theme-switch {
+        padding: 0.4rem 0.8rem;
+        margin-bottom: 1rem;
+      }
+      .theme-switch__label { font-size: 0.8rem; }
+
+      body.is-playing {
+        padding: 0.3rem;
+      }
+
+      .game-view__header {
+        padding: 0.4rem 0.6rem;
+        gap: 0.4rem;
+        border-radius: 12px;
+      }
+
+      .game-view__title {
+        font-size: 1rem;
+        gap: 0.35rem;
+      }
+
+      .game-view__title .game-view__icon {
+        font-size: 1.2rem;
+      }
+
+      .game-view__group {
+        font-size: 0.6rem;
+        padding: 0.15rem 0.45rem;
+      }
+
+      .back-btn {
+        font-size: 0.85rem;
+        padding: 0.45rem 0.8rem;
+        min-height: 36px;
+      }
+
+      .open-external {
+        display: none;
+      }
+
+      .game-view__frame-wrapper {
+        border-radius: 12px;
+      }
+
+      footer { padding-top: 1rem; font-size: 0.8rem; }
+    }
+
+    /* Très petits écrans */
+    @media (max-width: 380px) {
+      .game-view__group {
+        display: none;
+      }
+      .game-view__title {
+        font-size: 0.95rem;
+      }
+    }
+
+    /* Tablettes */
+    @media (min-width: 641px) and (max-width: 1024px) {
+      body.is-playing {
+        padding: 0.6rem;
+      }
+      .game-view__header {
+        padding: 0.6rem 1rem;
+      }
+      .game-view__title { font-size: 1.3rem; }
+      .game-view__frame-wrapper { border-radius: 18px; }
+    }
+
+    /* Mode paysage mobile : encore plus compact */
+    @media (max-height: 500px) and (orientation: landscape) {
+      body.is-playing {
+        padding: 0.2rem;
+      }
+      .game-view__header {
+        padding: 0.3rem 0.6rem;
+        border-radius: 10px;
+      }
+      .game-view__title { font-size: 0.9rem; }
+      .game-view__group { display: none; }
+      .back-btn {
+        font-size: 0.8rem;
+        padding: 0.35rem 0.7rem;
+        min-height: 32px;
+      }
+      .game-view__frame-wrapper {
+        border-radius: 10px;
+      }
+    }
+  </style>
 </head>
-<body class="h-full flex flex-col justify-between overflow-x-hidden relative text-white">
+<body>
 
-    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
-        <i class="fa-solid fa-ghost text-purple-900/20 text-7xl absolute top-6 left-6 animate-float"></i>
-        <i class="fa-solid fa-bat text-orange-900/20 text-6xl absolute top-1/4 right-8 animate-float" style="animation-delay: 1.5s;"></i>
-        <i class="fa-solid fa-spider text-purple-800/30 text-5xl absolute bottom-16 left-1/4 animate-float" style="animation-delay: 2.5s;"></i>
-        <i class="fa-solid fa-cloud-moon text-orange-800/20 text-8xl absolute bottom-6 right-6 animate-float" style="animation-delay: 0.8s;"></i>
+  <header>
+    <div class="theme-switch">
+      <span class="theme-switch__label" id="switch-label">Thème Sorcier</span>
+      <label class="toggle">
+        <input type="checkbox" id="theme-toggle" aria-label="Activer le thème sorcier" />
+        <span class="toggle__slider"></span>
+      </label>
     </div>
 
-    <!-- MAIN CONTAINER -->
-    <div class="relative z-10 container mx-auto px-4 py-4 max-w-xl flex-grow flex flex-col justify-between">
+    <h1 id="main-title">🚀 L'Aventure des Maths ! 🎮</h1>
+    <p class="subtitle" id="main-subtitle">Choisis ton défi et bats ton record !</p>
+  </header>
 
-        <header class="text-center mb-3">
-            <h1 class="font-spooky text-3xl sm:text-5xl text-spooky-orange tracking-wide animate-glow mb-1 flex items-center justify-center gap-2">
-                <i class="fa-solid fa-jack-o-lantern text-2xl sm:text-4xl"></i>
-                Maths d'Halloween
-                <i class="fa-solid fa-jack-o-lantern text-2xl sm:text-4xl"></i>
-            </h1>
-            <p class="text-purple-300 text-xs sm:text-sm font-semibold">Aide le petit fantôme à trouver le nombre manquant !</p>
+  <main>
 
-            <div class="grid grid-cols-3 gap-2 mt-3">
-                <div class="bg-spooky-card border border-purple-600/50 rounded-xl p-1.5 text-center shadow-lg">
-                    <div class="text-[10px] text-purple-300 font-bold uppercase">Score</div>
-                    <div id="score-display" class="text-xl sm:text-2xl font-extrabold text-spooky-yellow">0</div>
-                </div>
-                <div class="bg-spooky-card border border-purple-600/50 rounded-xl p-1.5 text-center shadow-lg">
-                    <div class="text-[10px] text-purple-300 font-bold uppercase">Combo 🍬</div>
-                    <div id="streak-display" class="text-xl sm:text-2xl font-extrabold text-spooky-orange">0</div>
-                </div>
-                <div class="bg-spooky-card border border-purple-600/50 rounded-xl p-1.5 text-center shadow-lg">
-                    <div class="text-[10px] text-purple-300 font-bold uppercase">Chaudron 🧪</div>
-                    <div id="solved-display" class="text-xl sm:text-2xl font-extrabold text-spooky-green">0/10</div>
-                </div>
-            </div>
-        </header>
+    <!-- ============ VUE JEU ============ -->
+    <div class="game-view" id="game-view" role="region" aria-label="Jeu en cours">
+      <div class="game-view__header">
+        <div class="game-view__title">
+          <span class="game-view__icon" id="game-view-icon" aria-hidden="true">⚡</span>
+          <span id="game-view-title">Calcul Mental</span>
+          <span class="game-view__group" id="game-view-group">Niveau CE2</span>
+        </div>
+        <div class="game-view__actions">
+          <a class="open-external" id="open-external" href="#" target="_blank" rel="noopener noreferrer">
+            🔗 Ouvrir
+          </a>
+          <button class="back-btn" id="back-btn" type="button">
+            ← Retour
+          </button>
+        </div>
+      </div>
 
-        <main class="my-auto">
-            <div id="game-card" class="bg-spooky-card/95 backdrop-blur-md border-3 border-spooky-orange rounded-2xl p-4 sm:p-6 shadow-2xl relative">
-
-                <!-- Mascot Message -->
-                <div class="flex items-center gap-3 mb-4 bg-spooky-darkPurple/80 p-2.5 sm:p-3 rounded-xl border border-purple-500/30">
-                    <div id="mascot" class="text-3xl sm:text-4xl transition-transform hover:scale-110 cursor-pointer" onclick="playMascotSound()">
-                        👻
-                    </div>
-                    <div id="mascot-text" class="text-xs sm:text-sm text-purple-100 font-medium">
-                        Trouve le nombre magique manquant pour réussir le sortilège !
-                    </div>
-                </div>
-
-                <!-- Equation Area -->
-                <div id="equation-container" class="flex flex-wrap items-center justify-center gap-2 sm:gap-3 my-6 text-2xl sm:text-4xl font-extrabold tracking-tight">
-                    <!-- Populated dynamically by JS -->
-                </div>
-
-                <!-- Submit & Controls -->
-                <div class="flex flex-col sm:flex-row gap-2 mt-4">
-                    <button id="btn-submit" onclick="checkAnswer()" class="flex-1 bg-gradient-to-r from-spooky-orange to-amber-500 hover:from-orange-600 hover:to-amber-600 text-slate-950 font-black text-base sm:text-lg py-3 px-4 rounded-xl shadow-lg transform active:scale-95 transition-all duration-150 flex items-center justify-center gap-2 border border-yellow-300">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                        VÉRIFIER !
-                    </button>
-                    <button onclick="openScratchpadModal()" class="flex-1 sm:flex-none bg-purple-800/80 hover:bg-purple-700 text-purple-200 font-bold px-4 py-3 rounded-xl border border-purple-500/40 text-sm flex items-center justify-center gap-2 transition active:scale-95">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                        <span>Ardoise</span>
-                    </button>
-                </div>
-
-            </div>
-        </main>
-
-        <footer class="mt-4 text-center text-[11px] text-purple-400">
-            <div class="flex justify-center items-center gap-3 mb-1">
-                <button onclick="openSettings()" class="hover:text-spooky-orange transition flex items-center gap-1">
-                    <i class="fa-solid fa-gear"></i> Réglages
-                </button>
-                <span>•</span>
-                <button onclick="resetStats()" class="hover:text-spooky-orange transition flex items-center gap-1">
-                    <i class="fa-solid fa-rotate-right"></i> Réinitialiser
-                </button>
-            </div>
-            <p>Conçu pour le CE2 🎃 - Prêt pour GitHub Pages</p>
-        </footer>
-
+      <div class="game-view__frame-wrapper">
+        <iframe
+          class="game-view__frame"
+          id="game-frame"
+          src="about:blank"
+          title="Jeu éducatif"
+          allow="fullscreen; autoplay"
+          referrerpolicy="no-referrer"
+        ></iframe>
+      </div>
     </div>
 
-    <div id="scratchpad-modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex flex-col justify-between p-3 sm:p-4 touch-none">
-        <div class="flex justify-between items-center bg-purple-950/90 p-3 rounded-2xl border border-purple-600/50 shadow-lg">
-            <div class="flex items-center gap-2 text-spooky-yellow font-bold text-base sm:text-lg">
-                <i class="fa-solid fa-pen-ruler text-spooky-orange"></i>
-                <span>Ardoise Magique</span>
-            </div>
-            <div class="flex items-center gap-2">
-                <button onclick="clearScratchpad()" class="bg-red-900/60 hover:bg-red-800 text-red-200 text-xs px-3 py-2 rounded-xl border border-red-500/40 flex items-center gap-1 active:scale-95 transition">
-                    <i class="fa-solid fa-eraser"></i> Effacer
-                </button>
-                <button onclick="closeScratchpadModal()" class="bg-spooky-orange hover:bg-orange-600 text-slate-950 font-black text-sm px-4 py-2 rounded-xl shadow-md active:scale-95 transition flex items-center gap-1">
-                    <i class="fa-solid fa-check"></i> Fermer
-                </button>
-            </div>
-        </div>
+    <!-- ============ GROUPE CE2 ============ -->
+    <section class="level-group" id="level-ce2" aria-labelledby="ce2-title">
+      <div class="level-group__header">
+        <span class="level-group__icon" aria-hidden="true">📚</span>
+        <h2 class="level-group__title" id="ce2-title">Niveau CE2</h2>
+        <span class="level-group__badge">6 jeux</span>
+      </div>
 
-        <div class="my-2 p-3 bg-purple-900/50 border border-amber-500/40 rounded-xl text-center flex flex-col items-center justify-center gap-1 shadow-inner">
-            <div class="text-xs text-purple-200 font-semibold">Soustraction à poser pour trouver le trou :</div>
-            <div id="scratchpad-op-text" class="text-2xl sm:text-3xl font-black text-spooky-yellow tracking-wider font-mono">
-                <!-- e.g. 84 - 32 = ? -->
-            </div>
-        </div>
+      <div class="grid">
+        <button class="card card--1" type="button"
+                data-url="https://sims07.github.io/game-child-calcul-mental/"
+                data-title="Calcul Mental"
+                data-icon="⚡"
+                data-group="Niveau CE2"
+                aria-label="Jouer à Calcul Mental">
+          <div class="card-icon" aria-hidden="true">⚡</div>
+          <h3 class="card-title">Calcul Mental</h3>
+          <p class="card-desc">Chrono, vitesse et additions ! Deviens un monstre du calcul rapide.</p>
+          <span class="btn">Jouer !</span>
+        </button>
 
-        <div class="flex-grow relative w-full h-full my-1 rounded-2xl overflow-hidden border-2 border-purple-500/40 bg-slate-900/90 shadow-2xl">
-            <canvas id="scratch-canvas" class="w-full h-full touch-none cursor-crosshair"></canvas>
-            
-            <div class="absolute bottom-3 right-3 flex gap-2 bg-purple-950/80 p-2 rounded-xl border border-purple-500/30 backdrop-blur-sm">
-                <button onclick="setChalkColor('#f59e0b')" class="w-7 h-7 rounded-full bg-amber-400 border-2 border-white/50 active:scale-110 transition"></button>
-                <button onclick="setChalkColor('#22c55e')" class="w-7 h-7 rounded-full bg-green-500 border-2 border-white/50 active:scale-110 transition"></button>
-                <button onclick="setChalkColor('#38bdf8')" class="w-7 h-7 rounded-full bg-sky-400 border-2 border-white/50 active:scale-110 transition"></button>
-                <button onclick="setChalkColor('#ffffff')" class="w-7 h-7 rounded-full bg-white border-2 border-white/50 active:scale-110 transition"></button>
-            </div>
-        </div>
-    </div>
+        <button class="card card--2" type="button"
+                data-url="https://sims07.github.io/game-child-math-serpent-ce2/"
+                data-title="Math Serpent CE2"
+                data-icon="🐍"
+                data-group="Niveau CE2"
+                aria-label="Jouer à Math Serpent CE2">
+          <div class="card-icon" aria-hidden="true">🐍</div>
+          <h3 class="card-title">Math Serpent CE2</h3>
+          <p class="card-desc">Mange les bonnes réponses pour faire grandir le serpent sans te crasher !</p>
+          <span class="btn">Jouer !</span>
+        </button>
 
-    <div id="settings-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-spooky-card border-2 border-spooky-orange rounded-2xl p-5 max-w-sm w-full shadow-2xl">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="font-spooky text-xl text-spooky-orange flex items-center gap-2">
-                    <i class="fa-solid fa-sliders"></i> Réglages
-                </h3>
-                <button onclick="closeSettings()" class="text-purple-400 hover:text-white text-lg">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="space-y-3 text-left text-xs sm:text-sm">
-                <div>
-                    <label class="block font-semibold text-purple-200 mb-1">Position du trou :</label>
-                    <select id="setting-hole-pos" class="w-full bg-slate-900 border border-purple-500 rounded-lg p-2 text-purple-100">
-                        <option value="random">Aléatoire (CE2)</option>
-                        <option value="first">Premier ( ... + B = C )</option>
-                        <option value="second">Deuxième ( A + ... = C )</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block font-semibold text-purple-200 mb-1">Niveau de difficulté :</label>
-                    <select id="setting-difficulty" class="w-full bg-slate-900 border border-purple-500 rounded-lg p-2 text-purple-100">
-                        <option value="easy">Facile (Somme &lt; 50)</option>
-                        <option value="medium" selected>Normal CE2 (Somme &lt; 100)</option>
-                        <option value="hard">Expert (Somme jusqu'à 150)</option>
-                    </select>
-                </div>
-                <div class="flex items-center justify-between pt-2">
-                    <span class="font-semibold text-purple-200">Sons</span>
-                    <button id="toggle-sound" onclick="toggleSound()" class="bg-purple-800 text-green-400 font-bold px-3 py-1.5 rounded-lg border border-purple-500">
-                        🔊 Activés
-                    </button>
-                </div>
-            </div>
-            <button onclick="closeSettings()" class="w-full mt-4 bg-spooky-orange hover:bg-orange-600 text-slate-950 font-bold py-2.5 rounded-xl">
-                Enregistrer
-            </button>
-        </div>
-    </div>
+        <button class="card card--3" type="button"
+                data-url="https://sims07.github.io/game-child-compte-est-bon/"
+                data-title="Le Compte est Bon"
+                data-icon="🎯"
+                data-group="Niveau CE2"
+                aria-label="Jouer au Compte est Bon">
+          <div class="card-icon" aria-hidden="true">🎯</div>
+          <h3 class="card-title">Le Compte est Bon</h3>
+          <p class="card-desc">Combine les nombres comme une énigme pour atteindre le chiffre cible !</p>
+          <span class="btn">Jouer !</span>
+        </button>
 
-    <div id="reward-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-spooky-card border-3 border-yellow-400 rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl">
-            <div class="text-5xl mb-3 animate-bounce">🏆</div>
-            <h2 class="font-spooky text-3xl text-spooky-yellow mb-1">Sorcier des Maths !</h2>
-            <p class="text-xs sm:text-sm text-purple-200 mb-4">Tu as résolu 10 additions avec succès ! Le chaudron magique déborde de bonbons ! 🍬🎃</p>
-            <div class="bg-purple-950 p-3 rounded-xl border border-purple-700/50 mb-4">
-                <div class="text-xs text-purple-300">Score de la partie</div>
-                <div id="modal-final-score" class="text-3xl font-black text-spooky-orange">0</div>
-            </div>
-            <button onclick="restartGame()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-slate-950 font-extrabold text-base py-3 rounded-xl shadow-lg border border-green-300">
-                REJOUER UNE PARTIE
-            </button>
-        </div>
-    </div>
+        <button class="card card--1" type="button"
+                data-url="https://sims07.github.io/game-child-geometrie-droite/"
+                data-title="Géométrie CE2"
+                data-icon="📐"
+                data-group="Niveau CE2"
+                aria-label="Jouer à Géométrie CE2">
+          <div class="card-icon" aria-hidden="true">📐</div>
+          <h3 class="card-title">Géométrie CE2</h3>
+          <p class="card-desc">Figures, solides, sommets et angles droits : entraîne-toi à reconnaître les formes !</p>
+          <span class="btn">Jouer !</span>
+        </button>
 
-    <script>
-        let state = {
-            num1: 0,
-            num2: 0,
-            targetResult: 0,
-            missingPos: 'second',
-            correctAnswer: 0,
-            score: 0,
-            streak: 0,
-            solvedCount: 0,
-            soundEnabled: true,
-            holePosSetting: 'random',
-            difficulty: 'medium'
-        };
+        <button class="card card--2" type="button"
+                data-url="https://sims07.github.io/game-child-calcul-mental-astuce/"
+                data-title="Maths Flash CE2"
+                data-icon="💡"
+                data-group="Niveau CE2"
+                aria-label="Jouer à Maths Flash CE2">
+          <div class="card-icon" aria-hidden="true">💡</div>
+          <h3 class="card-title">Maths Flash CE2</h3>
+          <p class="card-desc">Découvre les astuces du +9, du +8 et du passage à la dizaine, puis entraîne-toi !</p>
+          <span class="btn">Jouer !</span>
+        </button>
 
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        <button class="card card--3" type="button"
+                data-url="https://sims07.github.io/game-child-addition-a-trous/"
+                data-title="Maths d'Halloween"
+                data-icon="🎃"
+                data-group="Niveau CE2"
+                aria-label="Jouer à Maths d'Halloween">
+          <div class="card-icon" aria-hidden="true">🎃</div>
+          <h3 class="card-title">Maths d'Halloween</h3>
+          <p class="card-desc">Complète les additions à trous, écris sur l'ardoise magique et gagne des bonbons !</p>
+          <span class="btn">Jouer !</span>
+        </button>
+      </div>
+    </section>
 
-        function playSound(type) {
-            if (!state.soundEnabled) return;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+    <!-- ============ GROUPE FUTUR (exemple à décommenter) ============ -->
+    <!--
+    <section class="level-group" aria-labelledby="cm1-title">
+      <div class="level-group__header">
+        <span class="level-group__icon" aria-hidden="true">📖</span>
+        <h2 class="level-group__title" id="cm1-title">Niveau CM1</h2>
+        <span class="level-group__badge">Bientôt</span>
+      </div>
+      <div class="grid">
+        <button class="card card--1" type="button"
+                data-url="https://sims07.github.io/game-child-exemple/"
+                data-title="Nom du jeu"
+                data-icon="🎲"
+                data-group="Niveau CM1"
+                aria-label="Jouer à Nom du jeu">
+          <div class="card-icon" aria-hidden="true">🎲</div>
+          <h3 class="card-title">Nom du jeu</h3>
+          <p class="card-desc">Description du jeu.</p>
+          <span class="btn">Jouer !</span>
+        </button>
+      </div>
+    </section>
+    -->
 
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
+  </main>
 
-            const now = audioCtx.currentTime;
+  <footer>
+    <p>Fait avec 🛠️ par Papa</p>
+  </footer>
 
-            if (type === 'correct') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(523.25, now);
-                osc.frequency.setValueAtTime(659.25, now + 0.08);
-                osc.frequency.setValueAtTime(783.99, now + 0.16);
-                osc.frequency.setValueAtTime(1046.50, now + 0.24);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-                osc.start(now);
-                osc.stop(now + 0.5);
-            } else if (type === 'wrong') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(180, now);
-                osc.frequency.linearRampToValueAtTime(110, now + 0.25);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-                osc.start(now);
-                osc.stop(now + 0.3);
-            } else if (type === 'click') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(450, now);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-                osc.start(now);
-                osc.stop(now + 0.04);
-            }
+  <script>
+    (function() {
+      /* ============================================================
+         1) GESTION DU THÈME
+         ============================================================ */
+      const STORAGE_KEY = 'maths-portail-theme';
+      const toggle = document.getElementById('theme-toggle');
+      const switchLabel = document.getElementById('switch-label');
+      const mainTitle = document.getElementById('main-title');
+      const mainSubtitle = document.getElementById('main-subtitle');
+      const favicon = document.querySelector('link[rel="icon"]');
+
+      const THEMES = {
+        day: {
+          title: "🚀 L'Aventure des Maths ! 🎮",
+          subtitle: "Choisis ton défi et bats ton record !",
+          switchLabel: "Thème Sorcier",
+          favicon: "🚀"
+        },
+        magic: {
+          title: "🪄 L'École des Sorciers Maths ! ⚡",
+          subtitle: "Choisis ton sortilège et bats ton record !",
+          switchLabel: "Thème Jour",
+          favicon: "🪄"
+        }
+      };
+
+      function makeFavicon(emoji) {
+        const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>${emoji}</text></svg>`;
+        return "data:image/svg+xml," + encodeURIComponent(svg);
+      }
+
+      function applyTheme(theme) {
+        const html = document.documentElement;
+        const config = THEMES[theme];
+
+        if (theme === 'magic') {
+          html.setAttribute('data-theme', 'magic');
+        } else {
+          html.removeAttribute('data-theme');
         }
 
-        const mascotMessages = {
-            correct: [
-                "Bravo ! C'est un sortilège réussi !",
-                "Excellence mathématique !",
-                "Tu as trouvé le nombre secret !",
-                "Super ! La potion est prête !"
-            ],
-            wrong: [
-                "Oups ! Réessaye, tu peux y arriver !",
-                "Presque ! Utilise le brouillon si besoin.",
-                "Abracadabra... pas tout à fait ! Essaye encore."
-            ]
-        };
+        mainTitle.textContent = config.title;
+        mainSubtitle.textContent = config.subtitle;
+        switchLabel.textContent = config.switchLabel;
+        document.title = config.title;
 
-        function playMascotSound() {
-            playSound('click');
-        }
+        if (favicon) favicon.href = makeFavicon(config.favicon);
+        toggle.checked = (theme === 'magic');
+      }
 
-        function createNumberBlock(num, colorClass = 'text-white') {
-            const span = document.createElement('span');
-            span.className = `px-2.5 py-1 bg-purple-950/80 border-2 border-purple-600/60 rounded-xl shadow-inner ${colorClass}`;
-            span.innerText = num;
-            return span;
-        }
+      let savedTheme = 'day';
+      try {
+        savedTheme = localStorage.getItem(STORAGE_KEY) || 'day';
+      } catch (e) { /* localStorage indisponible */ }
+      applyTheme(savedTheme);
 
-        function createInputHole() {
-            const input = document.createElement('input');
-            input.id = 'hole-input';
-            input.type = 'number';
-            input.inputMode = 'numeric';
-            input.pattern = '[0-9]*';
-            input.className = 'input-hole py-1 text-2xl sm:text-4xl font-extrabold focus:outline-none';
-            input.placeholder = '?';
-            input.autocomplete = 'off';
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    checkAnswer();
-                }
+      toggle.addEventListener('change', function() {
+        const newTheme = this.checked ? 'magic' : 'day';
+        applyTheme(newTheme);
+        try {
+          localStorage.setItem(STORAGE_KEY, newTheme);
+        } catch (e) { /* ignore */ }
+      });
+
+      /* ============================================================
+         2) STATISTIQUES ANONYMES (GoatCounter)
+         ============================================================ */
+      function trackGame(title) {
+        try {
+          if (window.goatcounter && window.goatcounter.count) {
+            window.goatcounter.count({
+              path: 'jeu/' + title,
+              title: title,
+              event: true
             });
-            return input;
+          }
+        } catch (e) { /* ne jamais bloquer le jeu à cause des stats */ }
+      }
+
+      /* ============================================================
+         3) GESTION DE LA VUE JEU (iframe)
+         ============================================================ */
+      const gameView = document.getElementById('game-view');
+      const gameFrame = document.getElementById('game-frame');
+      const gameViewTitle = document.getElementById('game-view-title');
+      const gameViewIcon = document.getElementById('game-view-icon');
+      const gameViewGroup = document.getElementById('game-view-group');
+      const backBtn = document.getElementById('back-btn');
+      const openExternal = document.getElementById('open-external');
+      const cards = document.querySelectorAll('.card[data-url]');
+
+      function openGame(url, title, icon, group) {
+        gameViewTitle.textContent = title;
+        gameViewIcon.textContent = icon;
+        gameViewGroup.textContent = group || '';
+        gameViewGroup.style.display = group ? '' : 'none';
+        openExternal.href = url;
+        gameFrame.src = url;
+
+        document.body.classList.add('is-playing');
+        gameView.classList.add('is-active');
+
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      }
+
+      function closeGame() {
+        document.body.classList.remove('is-playing');
+        gameView.classList.remove('is-active');
+        gameFrame.src = 'about:blank';
+      }
+
+      cards.forEach(card => {
+        card.addEventListener('click', () => {
+          trackGame(card.dataset.title);
+          openGame(
+            card.dataset.url,
+            card.dataset.title,
+            card.dataset.icon,
+            card.dataset.group || ''
+          );
+        });
+      });
+
+      backBtn.addEventListener('click', closeGame);
+
+      // Touche Échap pour revenir à la grille
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && gameView.classList.contains('is-active')) {
+          closeGame();
         }
+      });
+    })();
+  </script>
 
-        function generateProblem() {
-            let maxVal = 99;
-            let minVal = 10;
-
-            if (state.difficulty === 'easy') {
-                maxVal = 49;
-            } else if (state.difficulty === 'hard') {
-                maxVal = 149;
-            }
-
-            state.num1 = Math.floor(Math.random() * (maxVal / 2 - minVal + 1)) + minVal;
-            state.num2 = Math.floor(Math.random() * (maxVal / 2 - minVal + 1)) + minVal;
-            state.targetResult = state.num1 + state.num2;
-
-            if (state.holePosSetting === 'random') {
-                state.missingPos = Math.random() > 0.5 ? 'first' : 'second';
-            } else {
-                state.missingPos = state.holePosSetting;
-            }
-
-            if (state.missingPos === 'first') {
-                state.correctAnswer = state.num1;
-            } else {
-                state.correctAnswer = state.num2;
-            }
-
-            renderEquation();
-
-            document.getElementById('mascot-text').innerText = "Trouve le nombre magique manquant pour réussir le sortilège !";
-            document.getElementById('mascot').innerText = "👻";
-            
-            setTimeout(() => {
-                const holeInput = document.getElementById('hole-input');
-                if (holeInput) holeInput.focus();
-            }, 100);
-        }
-
-        function renderEquation() {
-            const container = document.getElementById('equation-container');
-            container.innerHTML = '';
-
-            if (state.missingPos === 'first') {
-                container.appendChild(createInputHole());
-                
-                const plus = document.createElement('span');
-                plus.className = 'text-spooky-orange';
-                plus.innerText = '+';
-                container.appendChild(plus);
-
-                container.appendChild(createNumberBlock(state.num2, 'text-purple-200'));
-
-                const equals = document.createElement('span');
-                equals.className = 'text-spooky-orange';
-                equals.innerText = '=';
-                container.appendChild(equals);
-
-                container.appendChild(createNumberBlock(state.targetResult, 'text-spooky-yellow'));
-            } else {
-                container.appendChild(createNumberBlock(state.num1, 'text-purple-200'));
-
-                const plus = document.createElement('span');
-                plus.className = 'text-spooky-orange';
-                plus.innerText = '+';
-                container.appendChild(plus);
-
-                container.appendChild(createInputHole());
-
-                const equals = document.createElement('span');
-                equals.className = 'text-spooky-orange';
-                equals.innerText = '=';
-                container.appendChild(equals);
-
-                container.appendChild(createNumberBlock(state.targetResult, 'text-spooky-yellow'));
-            }
-        }
-
-        function checkAnswer() {
-            const input = document.getElementById('hole-input');
-            if (!input) return;
-
-            const userVal = parseInt(input.value, 10);
-
-            if (isNaN(userVal)) {
-                shakeGameCard();
-                return;
-            }
-
-            if (userVal === state.correctAnswer) {
-                // Correct
-                playSound('correct');
-                state.score += 10 + (state.streak * 2);
-                state.streak++;
-                state.solvedCount++;
-
-                updateDisplays();
-
-                const randMsg = mascotMessages.correct[Math.floor(Math.random() * mascotMessages.correct.length)];
-                document.getElementById('mascot-text').innerText = randMsg;
-                document.getElementById('mascot').innerText = "🎃";
-
-                triggerConfetti();
-
-                if (state.solvedCount >= 10) {
-                    setTimeout(() => {
-                        showRewardModal();
-                    }, 600);
-                } else {
-                    setTimeout(() => {
-                        generateProblem();
-                    }, 1200);
-                }
-            } else {
-                // Wrong
-                playSound('wrong');
-                state.streak = 0;
-                updateDisplays();
-                shakeGameCard();
-
-                const randMsg = mascotMessages.wrong[Math.floor(Math.random() * mascotMessages.wrong.length)];
-                document.getElementById('mascot-text').innerText = randMsg;
-                document.getElementById('mascot').innerText = "🦇";
-                
-                input.value = '';
-                input.focus();
-            }
-        }
-
-        function shakeGameCard() {
-            const card = document.getElementById('game-card');
-            card.classList.add('shake-animation');
-            setTimeout(() => {
-                card.classList.remove('shake-animation');
-            }, 400);
-        }
-
-        function updateDisplays() {
-            document.getElementById('score-display').innerText = state.score;
-            document.getElementById('streak-display').innerText = state.streak;
-            document.getElementById('solved-display').innerText = `${state.solvedCount}/10`;
-        }
-
-        function triggerConfetti() {
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 40,
-                    spread: 60,
-                    origin: { y: 0.7 },
-                    colors: ['#ff6b00', '#22c55e', '#f59e0b', '#a855f7']
-                });
-            }
-        }
-
-        let canvas, ctx;
-        let isDrawing = false;
-        let currentColor = '#f59e0b';
-
-        function initScratchpadCanvas() {
-            canvas = document.getElementById('scratch-canvas');
-            ctx = canvas.getContext('2d');
-
-            function resizeCanvas() {
-                const rect = canvas.parentElement.getBoundingClientRect();
-                canvas.width = rect.width;
-                canvas.height = rect.height;
-                drawScratchpadGuide();
-            }
-
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
-
-            // Touch & Mouse Listeners
-            canvas.addEventListener('mousedown', startDrawing);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDrawing);
-            canvas.addEventListener('mouseleave', stopDrawing);
-
-            canvas.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                const touch = e.touches[0];
-                startDrawing(touch);
-            }, { passive: false });
-
-            canvas.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-                const touch = e.touches[0];
-                draw(touch);
-            }, { passive: false });
-
-            canvas.addEventListener('touchend', stopDrawing);
-        }
-
-        function getCanvasCoords(e) {
-            const rect = canvas.getBoundingClientRect();
-            return {
-                x: e.clientX - rect.left,
-                y: e.clientY - rect.top
-            };
-        }
-
-        function startDrawing(e) {
-            isDrawing = true;
-            const coords = getCanvasCoords(e);
-            ctx.beginPath();
-            ctx.moveTo(coords.x, coords.y);
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            const coords = getCanvasCoords(e);
-            ctx.strokeStyle = currentColor;
-            ctx.lineWidth = 4;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            ctx.lineTo(coords.x, coords.y);
-            ctx.stroke();
-        }
-
-        function stopDrawing() {
-            isDrawing = false;
-        }
-
-        function setChalkColor(color) {
-            playSound('click');
-            currentColor = color;
-        }
-
-        function clearScratchpad() {
-            playSound('click');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawScratchpadGuide();
-        }
-
-        function drawScratchpadGuide() {
-            let known = state.missingPos === 'first' ? state.num2 : state.num1;
-            let topNum = state.targetResult;
-            let botNum = known;
-
-            // Header text
-            document.getElementById('scratchpad-op-text').innerText = `${topNum} - ${botNum} = ?`;
-
-            // Draw guidelines on canvas
-            ctx.save();
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
-            ctx.lineWidth = 1;
-
-            const gridStep = 30;
-            for (let x = 0; x < canvas.width; x += gridStep) {
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-                ctx.stroke();
-            }
-            for (let y = 0; y < canvas.height; y += gridStep) {
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
-            }
-
-            // Draw template columns with d and u spaced out
-            const startX = Math.min(canvas.width / 2 + 20, canvas.width - 90);
-            const startY = 40;
-            const colSpacing = 60; // Well-spaced columns for d and u
-
-            ctx.font = 'bold 24px Fredoka, sans-serif';
-            ctx.textAlign = 'center';
-
-            // Headers d (tens) and u (units)
-            ctx.fillStyle = '#ff6b00';
-            ctx.fillText('d', startX - colSpacing, startY);
-            ctx.fillStyle = '#22c55e';
-            ctx.fillText('u', startX, startY);
-
-            ctx.font = 'bold 36px monospace';
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-
-            // Split tens and units
-            const topD = Math.floor(topNum / 10);
-            const topU = topNum % 10;
-            const botD = Math.floor(botNum / 10);
-            const botU = botNum % 10;
-
-            // Top number
-            ctx.fillText(topD, startX - colSpacing, startY + 45);
-            ctx.fillText(topU, startX, startY + 45);
-
-            // Minus sign & bottom number
-            ctx.fillText('-', startX - colSpacing - 45, startY + 95);
-            ctx.fillText(botD, startX - colSpacing, startY + 95);
-            ctx.fillText(botU, startX, startY + 95);
-
-            // Operation line
-            ctx.strokeStyle = 'rgba(245, 158, 11, 0.6)';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(startX - colSpacing - 55, startY + 115);
-            ctx.lineTo(startX + 25, startY + 115);
-            ctx.stroke();
-
-            ctx.restore();
-        }
-
-        function openScratchpadModal() {
-            playSound('click');
-            const modal = document.getElementById('scratchpad-modal');
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                initScratchpadCanvas();
-            }, 50);
-        }
-
-        function closeScratchpadModal() {
-            playSound('click');
-            document.getElementById('scratchpad-modal').classList.add('hidden');
-        }
-
-        function openSettings() {
-            playSound('click');
-            document.getElementById('settings-modal').classList.remove('hidden');
-        }
-
-        function closeSettings() {
-            playSound('click');
-            state.holePosSetting = document.getElementById('setting-hole-pos').value;
-            state.difficulty = document.getElementById('setting-difficulty').value;
-            document.getElementById('settings-modal').classList.add('hidden');
-            generateProblem();
-        }
-
-        function toggleSound() {
-            state.soundEnabled = !state.soundEnabled;
-            const btn = document.getElementById('toggle-sound');
-            if (state.soundEnabled) {
-                btn.innerText = '🔊 Activés';
-                btn.className = 'bg-purple-800 text-green-400 font-bold px-3 py-1.5 rounded-lg border border-purple-500';
-            } else {
-                btn.innerText = '🔇 Coupés';
-                btn.className = 'bg-purple-950 text-gray-400 font-bold px-3 py-1.5 rounded-lg border border-purple-800';
-            }
-        }
-
-        function resetStats() {
-            playSound('click');
-            state.score = 0;
-            state.streak = 0;
-            state.solvedCount = 0;
-            updateDisplays();
-            generateProblem();
-        }
-
-        function showRewardModal() {
-            document.getElementById('modal-final-score').innerText = state.score;
-            document.getElementById('reward-modal').classList.remove('hidden');
-            triggerConfetti();
-        }
-
-        function restartGame() {
-            playSound('click');
-            document.getElementById('reward-modal').classList.add('hidden');
-            resetStats();
-        }
-
-        // Initialize game on window load
-        window.onload = function() {
-            generateProblem();
-        };
-    </script>
 </body>
 </html>
